@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Room Light Controller · Energy Logger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@200;400;600&display=swap" rel="stylesheet">
+<script>try{var t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+<header>
+  <div>
+    <h1>Room Light Controller<small>Live energy logger · ESP32-S3 edge node</small></h1>
+  </div>
+  <div class="clock" id="clock">
+    <div class="time" id="timeDisp">--:--:--</div>
+    <div class="date" id="dateDisp">---</div>
+  </div>
+  <div class="row">
+    <span class="pill off" id="pill"><i></i><b>Connecting…</b></span>
+    <button class="btn" id="authBtn">Sign in</button>
+    <button class="theme" id="theme" aria-label="Toggle light and dark theme"></button>
+  </div>
+</header>
+
+<div class="grid">
+  <section class="card c7" id="meter">
+    <h2>Power meter</h2>
+    <div class="read"><div class="big" id="w">0.00</div><div class="unit">W</div></div>
+    <div class="sub">
+      <div><b id="v">0.0</b><span>Volts</span></div>
+      <div><b id="a">0.000</b><span>Amps</span></div>
+      <div><b id="br">0%</b><span>Brightness</span></div>
+    </div>
+    <div class="bar"><div id="bar"></div></div>
+  </section>
+
+  <section class="card c5 ctl locked" id="ctl">
+    <h2>Controls</h2>
+    <div class="inner">
+      <div class="line"><div>Manual mode<div class="note" style="margin:0">Off returns to sensor automation</div></div><label class="sw"><input type="checkbox" id="mode" aria-label="Manual mode"><i></i></label></div>
+      <div><div class="line"><span>Brightness</span><b id="pct">0%</b></div><input type="range" id="sl" min="0" max="100" value="0" aria-label="LED brightness" style="margin-top:14px"></div>
+      <div class="row"><button class="btn pri" id="on">Turn on</button><button class="btn" id="off">Turn off</button></div>
+    </div>
+    <div class="lock"><button class="btn pri" id="unlock">Sign in to control</button></div>
+  </section>
+
+  <section class="card c12">
+    <h2>Sensors and environment</h2>
+    <div class="chips" id="chips"></div>
+  </section>
+
+  <section class="card c5" id="holdSec">
+    <h2>Hold reading<span class="badge">Held</span></h2>
+    <button class="btn" id="hold" style="width:100%">Hold reading</button>
+    <div class="held-grid" id="heldGrid" style="margin-top:14px"></div>
+    <p class="note" id="heldNote">Freezes this section and averages the last 10 seconds of power draw.</p>
+  </section>
+
+  <section class="card c7">
+    <h2>Power analytics</h2>
+    <div class="tw"><table>
+      <thead><tr><th>Metric</th><th>Live</th><th>Held</th><th>Unit</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table></div>
+  </section>
+</div>
+</main>
+
+<dialog id="dlg">
+  <form method="dialog" id="form">
+    <h1 style="font-size:20px">Sign in to control</h1>
+    <p class="note" style="margin-top:4px">Viewing stays public. Controls need the admin password.</p>
+    <input type="password" id="pw" placeholder="Password" autocomplete="current-password" required>
+    <div class="err" id="err"></div>
+    <div class="row" style="justify-content:flex-end;margin-top:8px"><button type="button" class="btn" id="cancel">Cancel</button><button class="btn pri" id="go">Sign in</button></div>
+  </form>
+</dialog>
+<div id="toast" role="status"></div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
